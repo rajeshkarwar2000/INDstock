@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<title>IND Stock AI</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>
+:root{--blur:24px;--gop:.18;--sat:1.8;--fg:#fff;--mut:rgba(255,255,255,.65);--tint:255,255,255;--line:rgba(255,255,255,.3);
+--bg:radial-gradient(60% 40% at 15% 10%,#5e5ce6 0,transparent 70%),radial-gradient(50% 40% at 90% 30%,#ff375f 0,transparent 70%),radial-gradient(60% 50% at 30% 95%,#30d5c8 0,transparent 70%),#0b1020;
+--buy:#30d158;--sell:#ff453a;--wait:#ffd60a;--skip:#aeaeb2;--side:#64d2ff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--fg:#111;--mut:rgba(0,0,0,.6);--line:rgba(255,255,255,.7);
+--bg:radial-gradient(60% 40% at 15% 10%,#a5b4fc 0,transparent 70%),radial-gradient(50% 40% at 90% 30%,#fda4af 0,transparent 70%),radial-gradient(60% 50% at 30% 95%,#99f6e4 0,transparent 70%),#eef1fb}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg) fixed;color:var(--fg);font:15px/1.4 -apple-system,"SF Pro Text",Roboto,"Segoe UI",sans-serif;padding-bottom:96px}
+main{max-width:520px;margin:0 auto;padding:16px 14px}
+section{display:none}section.on{display:block}
+h1{font-size:28px;margin:6px 4px 14px;letter-spacing:-.5px}h2{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--mut);margin:18px 6px 8px;font-weight:600}
+.glass{background:rgba(var(--tint),var(--gop));-webkit-backdrop-filter:blur(var(--blur)) saturate(var(--sat));backdrop-filter:blur(var(--blur)) saturate(var(--sat));border:1px solid var(--line);border-radius:22px;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 8px 30px rgba(0,0,0,.18)}
+.card{padding:16px;margin-bottom:12px}
+.hero{text-align:center;padding:22px 16px}
+#dec{font-size:52px;font-weight:800;letter-spacing:-1px;margin:4px 0}
+.sub{color:var(--mut);font-size:13px}
+.bar{height:8px;border-radius:5px;background:rgba(128,128,128,.28);position:relative;overflow:hidden;margin:6px 0 10px}
+.bar i{position:absolute;top:0;bottom:0;border-radius:5px}
+.row{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.btn{border:1px solid var(--line);background:rgba(var(--tint),.28);color:var(--fg);padding:11px 16px;border-radius:14px;font:600 15px inherit;font-family:inherit;cursor:pointer;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.btn.p{background:#0a84ff;color:#fff;border-color:transparent}.btn:disabled{opacity:.5}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+input[type=text],textarea{width:100%;border-radius:14px;border:1px solid var(--line);background:rgba(var(--tint),.2);color:var(--fg);padding:11px 12px;font:inherit;outline:none}
+textarea{min-height:90px;resize:vertical}
+::placeholder{color:var(--mut)}
+input[type=range]{width:100%;accent-color:#0a84ff;margin:4px 0}
+.seg{display:flex;padding:3px;border-radius:14px;background:rgba(128,128,128,.25);margin-bottom:10px}
+.seg button{flex:1;border:0;background:none;color:var(--fg);padding:8px;border-radius:11px;font:600 14px inherit;font-family:inherit}
+.seg button.on{background:rgba(var(--tint),.55);color:#111}
+.f{margin-bottom:12px}.f label{display:flex;justify-content:space-between;font-weight:600;font-size:14px}.f small{color:var(--mut);display:block;font-size:12px}
+nav{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));max-width:496px;margin:0 auto;display:flex;padding:6px;border-radius:26px;z-index:5}
+nav button{flex:1;border:0;background:none;color:var(--mut);padding:8px 2px;border-radius:20px;font:600 11px inherit;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:2px}
+nav button b{font-size:20px;font-weight:400}nav button.on{background:rgba(var(--tint),.35);color:var(--fg)}
+a.lk{color:#0a84ff;text-decoration:none;font-weight:600}
+.src{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(128,128,128,.2)}.src:last-child{border:0}.src span{flex:1}
+.src input{width:20px;height:20px;accent-color:#30d158}
+.toast{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);padding:10px 16px;border-radius:16px;z-index:9;display:none;max-width:90%;text-align:center}
+.reason{font-size:12px;color:var(--mut);margin:2px 0 0}
+.hi{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(128,128,128,.2);font-size:14px}
+.foot{font-size:11px;color:var(--mut);text-align:center;margin:18px 10px}
+</style></head><body>
+<div class="toast glass" id="toast"></div>
+<main>
+<section id="p-home" class="on">
+ <h1>IND Stock AI</h1>
+ <div class="glass hero">
+  <div class="sub" id="meta">No symbol yet</div>
+  <div id="dec">—</div>
+  <div class="sub" id="scoreTxt"></div>
+  <div class="bar" style="margin-top:12px"><i id="sb"></i></div>
+  <div class="row sub"><span>Sell</span><span id="conf"></span><span>Buy</span></div>
+  <div class="btns" style="justify-content:center"><button class="btn p" id="reAI">Refresh with AI</button><button class="btn" onclick="go('analyze')">Edit inputs</button></div>
+  <div class="sub" id="cd" style="margin-top:10px"></div>
+ </div>
+ <h2>Factor breakdown</h2><div class="glass card" id="bars"></div>
+ <h2>Quick glass</h2><div class="glass card"><div class="f"><label>Blur <span id="vg-blur"></span></label><input type="range" min="0" max="60" step="1" data-k="g.blur"></div></div>
+ <h2>History</h2><div class="glass card" id="hist"></div>
+</section>
+
+<section id="p-analyze">
+ <h1>Analyze</h1>
+ <div class="glass card">
+  <div class="seg" id="mode"><button data-m="stock">Stock</button><button data-m="fno">F&amp;O</button></div>
+  <input type="text" id="sym" placeholder="Symbol, e.g. RELIANCE or NIFTY" autocapitalize="characters">
+  <h2 style="margin-left:0">Headlines &amp; notes (paste from sources)</h2>
+  <textarea id="notes" placeholder="Paste today’s headlines, FII/DII numbers, broker targets, company news…"></textarea>
+  <div class="btns"><button class="btn p" id="runAI">AI fill all factors</button><button class="btn" id="cp">Copy prompt (Gemini/ChatGPT)</button><button class="btn" id="imp">Import JSON</button></div>
+  <div class="sub" id="st" style="margin-top:8px"></div>
+ </div>
+ <h2>Live research via Google &amp; Gemini</h2><div class="glass card"><div class="sub">Gemini has live Google access. One tap copies a ready-made research prompt and opens Gemini; paste its JSON reply back with the second button.</div><div class="btns"><button class="btn p" id="gem">1. Copy prompt &amp; open Gemini</button><button class="btn p" id="paste">2. Paste Gemini reply &amp; apply</button></div><h2 style="margin-left:0">Google News, pre-filled (past 24h)</h2><div id="res"></div></div><h2>Factor scores (−100 bearish … +100 bullish)</h2><div class="glass card" id="fs"></div>
+ <h2>Global markets split</h2><div class="glass card" id="ms"></div>
+ <div class="btns"><button class="btn p" id="save">Save decision to history</button></div>
+</section>
+
+<section id="p-sources">
+ <h1>Sources</h1>
+ <div class="sub" style="margin:0 6px 8px">Tick what you have consulted. Aim for 6+ brokers and 6+ newspapers. This page can’t fetch these sites itself: open them, skim, and paste key lines into Analyze.</div>
+ <div id="srcs"></div>
+</section>
+
+<section id="p-settings">
+ <h1>Settings</h1>
+ <h2>Glass effect</h2><div class="glass card" id="gs"></div>
+ <h2>Auto refresh</h2><div class="glass card"><div class="row"><span>Re-run AI every 10 min (while app is open)</span><input type="checkbox" id="auto" style="width:22px;height:22px"></div></div>
+ <h2>Factor weights (auto-normalized)</h2><div class="glass card" id="ws"></div>
+ <h2>Global market sub-weights</h2><div class="glass card" id="mws"></div>
+ <h2>Accounts (opens official login pages)</h2><div class="glass card" id="acc"></div>
+ <div class="sub" style="margin:0 6px">Passwords are never typed into or stored by this page; you sign in on each provider’s own site.</div>
+ <div class="btns"><button class="btn" id="theme">Toggle light/dark</button><button class="btn" id="reset">Reset all</button></div>
+</section>
+<div class="foot">Decision-support tool for personal use. Not financial advice; markets are risky.</div>
+</main>
+<nav class="glass" id="nav"><button data-p="home" class="on"><b>◉</b>Home</button><button data-p="analyze"><b>✦</b>Analyze</button><button data-p="sources"><b>☰</b>Sources</button><button data-p="settings"><b>⚙</b>Settings</button></nav>
+
+<script>
+const F=[['global','Global events (war, geopolitics)'],['mkts','Global markets (computed)'],['news','Indian & intl. media news'],['flow','FII / FPI / DII flows'],['company','Company news & reports'],['broker','Broker recommendations']];
+const M=[['usa','USA (stocks & F&O)'],['china','China'],['europe','Europe'],['other','Other']];
+const D=()=>({mode:'stock',sym:'',notes:'',f:{global:0,news:0,flow:0,company:0,broker:0},m:{usa:0,china:0,europe:0,other:0},
+w:{global:.15,mkts:.25,news:.15,flow:.15,company:.15,broker:.15},mw:{usa:.4,china:.1,europe:.3,other:.2},conf:50,why:{},
+g:{blur:24,gop:.18,sat:1.8},auto:true,hist:[],last:0,chk:{},theme:''});
+let S=D();try{S=Object.assign(D(),JSON.parse(localStorage.getItem('ind-ai-v2')||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem('ind-ai-v2',JSON.stringify(S))}catch(e){}};
+const $=i=>document.getElementById(i);
+const SRC={'Brokers':[['Motilal Oswal','https://www.motilaloswal.com'],['Groww','https://groww.in'],['Angel One','https://www.angelone.in'],['Zerodha','https://zerodha.com'],['ICICI Direct','https://www.icicidirect.com'],['Kotak Securities','https://www.kotaksecurities.com'],['HDFC Securities','https://www.hdfcsec.com'],['Sharekhan','https://www.sharekhan.com']],
+'Newspapers':[['Indian Express','https://indianexpress.com/section/business'],['The Hindu','https://www.thehindu.com/business'],['Economic Times','https://economictimes.indiatimes.com'],['Mint','https://www.livemint.com'],['Business Standard','https://www.business-standard.com'],['Hindustan Times','https://www.hindustantimes.com/business'],['Financial Express','https://www.financialexpress.com']],
+'Exchanges, regulators & flows':[['NSE','https://www.nseindia.com'],['BSE','https://www.bseindia.com'],['SEBI','https://www.sebi.gov.in'],['RBI','https://www.rbi.org.in'],['FPI flows (NSDL)','https://www.fpi.nsdl.co.in']],
+'International institutions':[['IMF','https://www.imf.org'],['World Bank','https://www.worldbank.org'],['OECD','https://www.oecd.org'],['Reuters Markets','https://www.reuters.com/markets']]};
+const ACC=[['Zerodha Kite','https://kite.zerodha.com'],['Groww','https://groww.in'],['Angel One','https://www.angelone.in'],['Motilal Oswal','https://www.motilaloswal.com'],['ICICI Direct','https://www.icicidirect.com'],['Upstox','https://upstox.com'],['Google','https://accounts.google.com']];
+const COL={BUY:'--buy',SELL:'--sell',WAIT:'--wait',SKIP:'--skip',SIDEWAYS:'--side'};
+const get=(p)=>p.split('.').reduce((o,k)=>o[k],S);
+const setp=(p,v)=>{const a=p.split('.'),l=a.pop();a.reduce((o,k)=>o[k],S)[l]=v};
+const pct=v=>Math.round(v*100);
+function toast(t){const e=$('toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',3500)}
+function go(p){document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id=='p-'+p));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.p==p));scrollTo(0,0)}
+$('nav').onclick=e=>{const b=e.target.closest('button');if(b)go(b.dataset.p)};
+
+function calc(){
+ const nw=Object.values(S.mw).reduce((a,b)=>a+b,0)||1;
+ const mk=M.reduce((a,[k])=>a+S.mw[k]*S.m[k],0)/nw;
+ const sc={global:S.f.global,mkts:mk,news:S.f.news,flow:S.f.flow,company:S.f.company,broker:S.f.broker};
+ const ws=Object.values(S.w).reduce((a,b)=>a+b,0)||1;
+ let t=0;F.forEach(([k])=>t+=S.w[k]*sc[k]/100);t/=ws;
+ let v=0;F.forEach(([k])=>v+=S.w[k]*Math.pow(sc[k]/100-t,2));const disp=Math.sqrt(v/ws);
+ let d;
+ if(S.conf<35)d='SKIP';else if(Math.abs(t)<.12)d=disp>.45?'WAIT':'SIDEWAYS';else if(t>=.3&&disp<.6)d='BUY';else if(t<=-.3&&disp<.6)d='SELL';else d='WAIT';
+ return{sc,t,d,disp}}
+
+function update(){
+ const r=calc(),c=COL[r.d];
+ $('dec').textContent=r.d;$('dec').style.color=`var(${c})`;
+ $('meta').textContent=(S.sym?S.sym+' · ':'')+(S.mode=='fno'?'F&O (BUY = long/call bias, SELL = short/put bias)':'Stock (cash)');
+ $('scoreTxt').textContent=`Weighted score ${r.t>=0?'+':''}${(r.t*100).toFixed(0)} / 100 · factor disagreement ${(r.disp*100).toFixed(0)}`;
+ $('conf').textContent='Confidence '+S.conf+'%';
+ const sb=$('sb'),w=Math.abs(r.t)*50;sb.style.background=`var(${c})`;sb.style.width=w+'%';sb.style.left=r.t>=0?'50%':(50-w)+'%';
+ $('bars').innerHTML=F.map(([k,n])=>{const s=r.sc[k],ww=S.w[k]/(Object.values(S.w).reduce((a,b)=>a+b,0)||1);
+  return `<div class="f"><label><span>${n}</span><span>${s>=0?'+':''}${Math.round(s)} · ${pct(ww)}%</span></label><div class="bar"><i style="background:var(${s>=0?'--buy':'--sell'});left:${s>=0?50:50+s/2}%;width:${Math.abs(s)/2}%"></i></div>${S.why[k]?`<div class="reason">${esc(S.why[k])}</div>`:''}</div>`}).join('');
+ $('hist').innerHTML=S.hist.length?S.hist.map(h=>`<div class="hi"><span>${esc(h.sym||'—')} · ${h.mode=='fno'?'F&O':'Stock'}<br><span class="sub">${h.t}</span></span><b style="color:var(${COL[h.d]})">${h.d} ${h.s>=0?'+':''}${h.s}</b></div>`).join(''):'<span class="sub">Nothing saved yet.</span>';
+ document.querySelectorAll('[data-k]').forEach(i=>{const k=i.dataset.k;if(document.activeElement!==i)i.value=get(k);const o=$('v-'+k);if(o)o.textContent=fmt(k,get(k));const g=$('vg-'+k.split('.')[1]);if(g&&k[0]=='g')g.textContent=fmt(k,get(k))});
+ const sw=Object.values(S.w).reduce((a,b)=>a+b,0);$('wsum')&&($('wsum').textContent='Raw sum '+pct(sw)+'% (normalized to 100%)');
+ save()}
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const fmt=(k,v)=>k[0]=='w'||k.startsWith('mw')?pct(v)+'%':k=='g.blur'?v+'px':k=='g.gop'?pct(v)+'%':k=='g.sat'?v+'×':v;
+const sl=(k,min,max,step,label,sub)=>`<div class="f"><label><span>${label}</span><span id="v-${k}"></span></label>${sub?`<small>${sub}</small>`:''}<input type="range" min="${min}" max="${max}" step="${step}" data-k="${k}"></div>`;
+
+function build(){
+ $('fs').innerHTML=F.filter(x=>x[0]!='mkts').map(([k,n])=>sl('f.'+k,-100,100,1,n)).join('');
+ $('ms').innerHTML=M.map(([k,n])=>sl('m.'+k,-100,100,1,n)).join('');
+ $('gs').innerHTML=sl('g.blur',0,60,1,'Blur')+sl('g.gop',0,.6,.01,'Transparency / frost')+sl('g.sat',1,3,.1,'Colour boost');
+ $('ws').innerHTML=F.map(([k,n])=>sl('w.'+k,0,.5,.005,n)).join('')+'<div class="sub" id="wsum"></div>';
+ $('mws').innerHTML=M.map(([k,n])=>sl('mw.'+k,0,1,.01,n)).join('');
+ $('acc').innerHTML=ACC.map(([n,u])=>`<div class="src"><span>${n}</span><a class="lk" href="${u}" target="_blank" rel="noopener">Sign in ↗</a></div>`).join('');
+ $('srcs').innerHTML=Object.entries(SRC).map(([g,l])=>`<h2>${g} <span id="cnt-${g[0]}"></span></h2><div class="glass card">${l.map(([n,u])=>`<div class="src"><input type="checkbox" data-c="${n}"><span>${n}</span><a class="lk" href="${u}" target="_blank" rel="noopener">Open ↗</a></div>`).join('')}</div>`).join('');
+ syncSrc()}
+function syncSrc(){document.querySelectorAll('[data-c]').forEach(c=>c.checked=!!S.chk[c.dataset.c]);
+ ['Brokers','Newspapers'].forEach(g=>{const n=SRC[g].filter(([x])=>S.chk[x]).length;$('cnt-'+g[0]).textContent=`${n}/6 ${n>=6?'✓':''}`})}
+document.addEventListener('input',e=>{const i=e.target;if(i.dataset.k){setp(i.dataset.k,+i.value);if(i.dataset.k[0]=='g')glass();update()}});
+document.addEventListener('change',e=>{const i=e.target;if(i.dataset.c){S.chk[i.dataset.c]=i.checked;syncSrc();save()}});
+function glass(){const r=document.documentElement.style;r.setProperty('--blur',S.g.blur+'px');r.setProperty('--gop',S.g.gop);r.setProperty('--sat',S.g.sat)}
+function setMode(){document.querySelectorAll('#mode button').forEach(b=>b.classList.toggle('on',b.dataset.m==S.mode))}
+$('mode').onclick=e=>{const b=e.target.closest('button');if(b){S.mode=b.dataset.m;setMode();update()}};
+$('sym').oninput=e=>{S.sym=e.target.value.toUpperCase().trim();update()};
+$('notes').oninput=e=>{S.notes=e.target.value;save()};
+$('auto').onchange=e=>{S.auto=e.target.checked;save()};
+$('save').onclick=()=>{const r=calc();S.hist.unshift({sym:S.sym,mode:S.mode,d:r.d,s:Math.round(r.t*100),t:new Date().toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'})});S.hist=S.hist.slice(0,15);update();toast('Saved');go('home')};
+$('reset').onclick=()=>{if(confirm('Reset everything?')){S=D();save();location.reload()}};
+$('theme').onclick=()=>{const d=document.documentElement;const dark=d.dataset.theme=='dark'||(!d.dataset.theme&&matchMedia('(prefers-color-scheme:dark)').matches);S.theme=dark?'light':'dark';applyTheme();save()};
+function applyTheme(){const d=document.documentElement;if(S.theme=='light'){d.dataset.theme='light';d.style.setProperty('--fg','#111');d.style.setProperty('--mut','rgba(0,0,0,.6)');d.style.setProperty('--bg','radial-gradient(60% 40% at 15% 10%,#a5b4fc 0,transparent 70%),radial-gradient(50% 40% at 90% 30%,#fda4af 0,transparent 70%),radial-gradient(60% 50% at 30% 95%,#99f6e4 0,transparent 70%),#eef1fb')}else if(S.theme=='dark'){d.dataset.theme='dark';['--fg','--mut','--bg'].forEach(p=>d.style.removeProperty(p))}}
+
+function prompt_(){
+ const picks=Object.entries(S.chk).filter(([,v])=>v).map(([k])=>k).join(', ')||'none ticked';
+ return `You are an Indian equity & F&O analyst. Today is ${new Date().toDateString()}. Instrument: ${S.sym||'NIFTY 50 / broad market'} (${S.mode=='fno'?'F&O':'cash stock'}).
+Score each factor from -100 (very bearish) to +100 (very bullish) for the next trading day for the Indian market and this instrument. Use the pasted notes first; if they lack a factor, use your own knowledge and lower "confidence" because you may lack live data. Perspectives to weigh: brokers/papers ticked by the user: ${picks}.
+Factors: global (wars, geopolitics, major global events); usa, china, europe, other (overseas markets & F&O impact on India); news (Indian & international media); flow (FII/FPI/DII inflow/outflow); company (company news & reports); broker (popular broker recommendations: Motilal Oswal, Groww, Angel One etc.).
+NOTES:
+${S.notes||'(none pasted)'}
+Reply ONLY with JSON: {"global":n,"usa":n,"china":n,"europe":n,"other":n,"news":n,"flow":n,"company":n,"broker":n,"confidence":0-100,"reasons":{"global":"short","mkts":"short","news":"short","flow":"short","company":"short","broker":"short"}}`}
+function apply(j){const c=v=>Math.max(-100,Math.min(100,Math.round(+v||0)));
+ ['global','news','flow','company','broker'].forEach(k=>{if(k in j)S.f[k]=c(j[k])});
+ ['usa','china','europe','other'].forEach(k=>{if(k in j)S.m[k]=c(j[k])});
+ if('confidence' in j)S.conf=Math.max(0,Math.min(100,Math.round(+j.confidence||0)));
+ if(j.reasons)S.why=j.reasons;S.last=Date.now();update()}
+let busy=false;
+async function runAI(auto){
+ if(busy)return;busy=true;$('runAI').disabled=$('reAI').disabled=true;$('st').textContent='Asking Claude…';
+ try{const sm=typeof claude==='undefined'?null:await claude.use('sample');if(!sm){toast('AI is not available in this view. Use Copy prompt instead.');return}
+  const j=await sm.json(prompt_(),{modelTier:'default',cache:false});apply(j);$('st').textContent='Updated '+new Date().toLocaleTimeString('en-IN');if(!auto)go('home')}
+ catch(e){const m=e&&e.message||'AI call failed';$('st').textContent=m;toast(m)}
+ finally{busy=false;$('runAI').disabled=$('reAI').disabled=false}}
+$('runAI').onclick=()=>runAI(false);$('reAI').onclick=()=>runAI(false);
+$('cp').onclick=async()=>{const t=prompt_();try{await navigator.clipboard.writeText(t);toast('Prompt copied. Paste it into Gemini or ChatGPT, then use Import JSON.')}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');toast('Prompt copied')}catch(x){toast('Copy blocked')}a.remove()}};
+$('imp').onclick=()=>{const t=window.prompt('Paste the JSON reply from Gemini/ChatGPT');if(!t)return;try{apply(JSON.parse(t.replace(/```json|```/g,'').trim()));toast('Imported');go('home')}catch(e){toast('Could not read that JSON')}};
+setInterval(()=>{if(!S.last){$('cd').textContent='Run “AI fill” once to start 10-minute auto refresh.';return}
+ const left=S.last+6e5-Date.now();
+ if(!S.auto){$('cd').textContent='Auto refresh off';return}
+ if(left<=0&&!busy&&!document.hidden&&typeof claude!=='undefined'){$('cd').textContent='Refreshing…';runAI(true);return}
+ $('cd').textContent=`Last update ${new Date(S.last).toLocaleTimeString('en-IN')} · next in ${Math.max(0,Math.floor(left/6e4))}m ${Math.max(0,Math.floor(left/1e3)%60)}s`},1000);
+function copyText(t){return navigator.clipboard.writeText(t).catch(()=>{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();const ok=document.execCommand('copy');a.remove();if(!ok)throw 0})}
+function gemPrompt(){return prompt_().replace('Use the pasted notes first; if they lack a factor, use your own knowledge and lower "confidence" because you may lack live data.','Before scoring, search the live web with Google for today’s news and data on every factor (Indian and international newspapers, NSE/BSE, RBI, SEBI, IMF/World Bank, FII/DII data, broker reports), and also use the notes. Base confidence on how fresh and consistent the sources are.')}
+function resLinks(){const s=S.sym||'Nifty 50',q={'Global events & war':'geopolitical events impact Indian stock market today','US markets':'US stock market Dow Nasdaq futures impact on Sensex Nifty','China & Europe':'China Europe stock markets today Asian European markets','Indian media news':s+' stock market news India today','FII / DII flows':'FII DII data today India','Company news':s+' share price news results','Broker views':s+' target price recommendation Motilal Oswal Angel One Groww','Intl institutions':'IMF World Bank report India stock market outlook'};return Object.entries(q).map(([n,v])=>`<div class="src"><span>${n}</span><a class="lk" href="https://www.google.com/search?q=${encodeURIComponent(v)}&tbm=nws&tbs=qdr:d" target="_blank" rel="noopener">Google News ↗</a></div>`).join('')}
+function renderRes(){$('res').innerHTML=resLinks()}
+const u0=update;update=function(){u0();renderRes()};
+$('gem').onclick=async()=>{try{await copyText(gemPrompt());toast('Prompt copied. Paste it in Gemini, then come back and tap step 2.')}catch(e){toast('Copy blocked: use the Copy prompt button')}window.open('https://gemini.google.com/app','_blank','noopener')};
+$('paste').onclick=async()=>{try{const t=await navigator.clipboard.readText();apply(JSON.parse(t.slice(t.indexOf('{'),t.lastIndexOf('}')+1)));toast('Applied Gemini scores');go('home')}catch(e){$('imp').click()}};
+build();glass();applyTheme();renderRes();setMode();$('sym').value=S.sym;$('notes').value=S.notes;$('auto').checked=S.auto;update();
+if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script></body></html>
